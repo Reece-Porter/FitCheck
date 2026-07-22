@@ -2,10 +2,10 @@
 
 import { Fit } from "@/lib/types";
 import { CAT_ICON } from "@/components/icons";
-import { money, totalPrice, formatDate, safeUrl } from "@/lib/format";
+import { money, totalPrice, formatDate, safeImageSrc } from "@/lib/format";
 
 function Cell({ image, category }: { image: string; category: string }) {
-  const img = safeUrl(image);
+  const img = safeImageSrc(image);
   return (
     <div className="cell">
       {img ? (

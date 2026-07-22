@@ -40,6 +40,15 @@ export function safeUrl(u: string | undefined | null): string {
   return "";
 }
 
+/* Like safeUrl but also permits inline data:image URLs, used for photos that
+   were dropped, pasted or uploaded (and stored as base64). Never use this for
+   links the user will navigate to — only for <img src>. */
+export function safeImageSrc(u: string | undefined | null): string {
+  if (!u) return "";
+  if (/^data:image\//i.test(u)) return u;
+  return safeUrl(u);
+}
+
 export function cap(s: string): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }

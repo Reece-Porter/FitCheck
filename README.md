@@ -60,6 +60,10 @@ Then publish the `out/` directory (for example with the included
 
 - Displaying a photo from another site works straight away — paste the product
   image URL (right-click the photo → **Copy image address**).
+- Or add a photo directly: **drop** an image onto the drop zone, **paste** one
+  from the clipboard (Ctrl/Cmd+V — including "Copy image" or a screenshot), or
+  click to **browse**. Dropped/pasted images are downscaled and stored inline,
+  so this works even for shops that block automated fetching.
 - For a **product page link**, the app tries to auto-extract the photo, title
   and price from the page's Open Graph tags via public read-only CORS proxies.
   This is best-effort: if a proxy is unavailable or a site blocks it, paste the
