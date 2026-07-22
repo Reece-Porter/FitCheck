@@ -6,7 +6,8 @@ import PageHead from "@/components/PageHead";
 import { useBuilder, useFits, getReviewTarget } from "@/lib/store";
 import { critique } from "@/lib/styleScore";
 import { CAT_ICON } from "@/components/icons";
-import { cap, safeImageSrc } from "@/lib/format";
+import { cap } from "@/lib/format";
+import SmartImage from "@/components/SmartImage";
 import { Item } from "@/lib/types";
 
 const TONE_MARK: Record<string, string> = { good: "✓", tip: "→", warn: "!" };
@@ -86,12 +87,7 @@ export default function StyleCheckPage() {
               {items.slice(0, 8).map((it) => (
                 <div className="mini" key={it.id}>
                   <div className="frame">
-                    {safeImageSrc(it.image) ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={safeImageSrc(it.image)} alt="" onError={(e) => (e.currentTarget.style.display = "none")} />
-                    ) : (
-                      <div className="noimg">{CAT_ICON[it.category]}</div>
-                    )}
+                    <SmartImage src={it.image} alt="" width={160} fallback={<div className="noimg">{CAT_ICON[it.category]}</div>} />
                   </div>
                 </div>
               ))}
