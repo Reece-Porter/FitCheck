@@ -10,12 +10,13 @@ import Modal from "@/components/Modal";
 import { useBuilder, useFits, useWishlist, setReviewTarget } from "@/lib/store";
 import { money, totalPrice } from "@/lib/format";
 import { CATEGORIES } from "@/lib/categories";
+import { sampleOutfit } from "@/lib/sample";
 import { toast } from "@/components/Toast";
 import { Item } from "@/lib/types";
 
 export default function BuilderPage() {
   const router = useRouter();
-  const { items, remove, clear } = useBuilder();
+  const { items, remove, clear, replace } = useBuilder();
   const { save } = useFits();
   const { add: addWish } = useWishlist();
   const [saveOpen, setSaveOpen] = useState(false);
@@ -104,6 +105,15 @@ export default function BuilderPage() {
               <div className="mark">Ø</div>
               <h3>Your outfit board is empty</h3>
               <p>Paste a shopping link on the right, fetch the photo, and start building a look you can see all together.</p>
+              <button
+                className="btn accent"
+                onClick={() => {
+                  replace(sampleOutfit());
+                  toast("Sample outfit loaded");
+                }}
+              >
+                Load a sample outfit
+              </button>
             </div>
           ) : (
             <>

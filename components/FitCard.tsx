@@ -2,18 +2,18 @@
 
 import { Fit } from "@/lib/types";
 import { CAT_ICON } from "@/components/icons";
-import { money, totalPrice, formatDate, safeImageSrc } from "@/lib/format";
+import SmartImage from "@/components/SmartImage";
+import { money, totalPrice, formatDate } from "@/lib/format";
 
 function Cell({ image, category }: { image: string; category: string }) {
-  const img = safeImageSrc(image);
   return (
     <div className="cell">
-      {img ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={img} alt="" loading="lazy" onError={(e) => ((e.currentTarget.style.display = "none"))} />
-      ) : (
-        <div className="noimg">{CAT_ICON[category as keyof typeof CAT_ICON] || "✦"}</div>
-      )}
+      <SmartImage
+        src={image}
+        alt=""
+        width={360}
+        fallback={<div className="noimg">{CAT_ICON[category as keyof typeof CAT_ICON] || "✦"}</div>}
+      />
     </div>
   );
 }

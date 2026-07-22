@@ -65,9 +65,17 @@ Then publish the `out/` directory (for example with the included
   click to **browse**. Dropped/pasted images are downscaled and stored inline,
   so this works even for shops that block automated fetching.
 - For a **product page link**, the app tries to auto-extract the photo, title
-  and price from the page's Open Graph tags via public read-only CORS proxies.
-  This is best-effort: if a proxy is unavailable or a site blocks it, paste the
-  image URL manually and everything else still works.
+  and price from the page's Open Graph tags (the same preview image Google and
+  social cards use) via public read-only CORS proxies. This is best-effort: if a
+  proxy is unavailable or a site blocks it, paste the image URL manually and
+  everything else still works.
+- Photos are displayed as lightweight resized thumbnails via the free
+  [wsrv.nl](https://wsrv.nl) image CDN (which also rescues many hotlink-blocked
+  shop images), falling back to the original image, then a placeholder.
+
+New here? The Build page has a **Load a sample outfit** button that fills the
+board with a ready-made look so you can try saving, the wishlist, For You and
+the Style Check straight away.
 
 ### Full retailer support (optional proxy)
 
