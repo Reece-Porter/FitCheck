@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { Item } from "@/lib/types";
 import { CAT_ICON } from "@/components/icons";
-import { money, safeUrl } from "@/lib/format";
+import { money, safeUrl, safeImageSrc } from "@/lib/format";
 
 type Action = { key: string; label: string; glyph: string; danger?: boolean; onClick: () => void };
 
 export default function PieceCard({ item, actions }: { item: Item; actions?: Action[] }) {
   const [broken, setBroken] = useState(false);
-  const img = safeUrl(item.image);
+  const img = safeImageSrc(item.image);
   const showImg = img && !broken;
 
   return (

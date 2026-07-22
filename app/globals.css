@@ -329,6 +329,31 @@ main { flex: 1; }
 .status.err { color: var(--accent-ink); }
 .status.ok { color: #2f7d4f; }
 
+/* drop / paste / browse image zone */
+.dropzone {
+  margin-top: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.85rem 1rem;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--ivory);
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease), background 0.18s var(--ease), color 0.18s var(--ease);
+}
+.dropzone:hover,
+.dropzone:focus-visible { border-color: var(--accent); color: var(--ink); outline: none; }
+.dropzone.drag { border-color: var(--accent); background: var(--accent-wash); color: var(--accent-ink); }
+.dropzone strong { font-weight: 600; color: var(--ink); }
+.dropzone.drag strong { color: var(--accent-ink); }
+.dropzone u { color: var(--accent-ink); text-underline-offset: 2px; }
+.dz-ico { font-size: 1.1rem; line-height: 1; }
+
 /* blocked-shop helper callout */
 .fetch-help {
   margin-top: 0.8rem;
