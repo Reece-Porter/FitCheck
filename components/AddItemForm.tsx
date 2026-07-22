@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useBuilder, uid } from "@/lib/store";
-import { fetchPreview, isImageUrl, Preview } from "@/lib/preview";
+import { fetchPreview, isImageUrl, getCustomProxy, setCustomProxy, Preview } from "@/lib/preview";
 import { guessCategory } from "@/lib/categories";
 import { parsePrice, safeUrl, hostname } from "@/lib/format";
 import { Category } from "@/lib/types";
@@ -19,7 +19,15 @@ export default function AddItemForm() {
   const [pendingImage, setPendingImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ text: string; kind?: "err" | "ok" }>({ text: "" });
+  const [showHelp, setShowHelp] = useState(false);
+  const [proxy, setProxy] = useState("");
+  const [advOpen, setAdvOpen] = useState(false);
   const urlRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const saved = getCustomProxy();
+    if (saved) setProxy(saved);
+  }, []);
 
   async function runFetch() {
     const u = url.trim();
@@ -27,6 +35,7 @@ export default function AddItemForm() {
     if (!safeUrl(u)) return setStatus({ text: "That doesn't look like a valid URL.", kind: "err" });
 
     setLoading(true);
+    setShowHelp(false);
     setStatus({ text: "Fetching preview…" });
     const p = await fetchPreview(u);
     setLoading(false);
@@ -44,11 +53,19 @@ export default function AddItemForm() {
       setStatus({ text: "Using the pasted image URL.", kind: "ok" });
     } else {
       setPendingImage(null);
+      setShowHelp(true);
       setStatus({
-        text: "Couldn't auto-load an image. Right-click the product photo → “Copy image address”, paste that and fetch again — or just fill in the details below.",
+        text: p.blocked
+          ? `${hostname(u) || "This shop"} blocks automated photo fetching. Here's the quick way around it:`
+          : "Couldn't auto-load a photo from that link. Here's the quick way to add it:",
         kind: "err"
       });
     }
+  }
+
+  function saveProxy() {
+    setCustomProxy(proxy);
+    toast(proxy.trim() ? "Custom proxy saved" : "Custom proxy cleared");
   }
 
   function onSubmit(e: React.FormEvent) {
@@ -76,6 +93,7 @@ export default function AddItemForm() {
     setCat("");
     setPreview(null);
     setPendingImage(null);
+    setShowHelp(false);
     setStatus({ text: "" });
     urlRef.current?.focus();
     toast("Added to your outfit");
@@ -108,11 +126,26 @@ export default function AddItemForm() {
               {loading ? <span className="spinner" /> : "Fetch"}
             </button>
           </div>
-          <p className="hint">
-            If it can&rsquo;t grab the photo, right-click the product image → &ldquo;Copy image address&rdquo;
-            and paste that.
-          </p>
+          <p className="hint">Works on most shops. Big retailers that block bots (Urban Outfitters, ASOS…) need the image trick below.</p>
         </div>
+
+        {showHelp && (
+          <div className="fetch-help">
+            <strong>Add it from the photo instead — works on any shop:</strong>
+            <ol>
+              <li>Right-click the product photo → <em>“Copy image address”</em>.</li>
+              <li>Paste it in the box above and press <em>Fetch</em> (or just click away).</li>
+              <li>Fill in the name, brand &amp; price, then <em>Add to outfit</em>.</li>
+            </ol>
+            <p>
+              Want big shops to just work?{" "}
+              <button type="button" className="linkish" onClick={() => setAdvOpen(true)}>
+                Set up a fetch proxy
+              </button>{" "}
+              (one-time, see the README).
+            </p>
+          </div>
+        )}
 
         {preview?.image && (
           <div className="preview">
@@ -159,6 +192,26 @@ export default function AddItemForm() {
         <button type="submit" className="btn accent block">
           Add to outfit
         </button>
+
+        <details className="advanced" open={advOpen}>
+          <summary>Advanced · custom fetch proxy</summary>
+          <p className="hint">
+            Paste your own proxy URL (e.g. a Cloudflare Worker — see the README) to fetch photos from shops that
+            block the public proxies. It should accept <code>?url=</code>. Leave blank to use the defaults.
+          </p>
+          <div className="url-row">
+            <input
+              className="input"
+              type="url"
+              placeholder="https://your-proxy.workers.dev"
+              value={proxy}
+              onChange={(e) => setProxy(e.target.value)}
+            />
+            <button type="button" className="btn sm ghost" onClick={saveProxy}>
+              Save
+            </button>
+          </div>
+        </details>
       </form>
     </aside>
   );

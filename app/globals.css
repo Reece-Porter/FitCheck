@@ -329,6 +329,39 @@ main { flex: 1; }
 .status.err { color: var(--accent-ink); }
 .status.ok { color: #2f7d4f; }
 
+/* blocked-shop helper callout */
+.fetch-help {
+  margin-top: 0.8rem;
+  padding: 0.9rem 1rem;
+  background: var(--accent-wash);
+  border: 1px solid #ecd3ca;
+  border-radius: var(--radius);
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+.fetch-help strong { display: block; margin-bottom: 0.5rem; color: var(--accent-ink); }
+.fetch-help ol { margin: 0 0 0.6rem; padding-left: 1.15rem; }
+.fetch-help li { margin-bottom: 0.3rem; line-height: 1.45; }
+.fetch-help em { font-style: normal; font-weight: 600; }
+.fetch-help p { margin: 0; }
+.linkish {
+  background: none; border: 0; padding: 0; color: var(--accent-ink);
+  font: inherit; font-weight: 600; border-bottom: 1px solid currentColor; cursor: pointer;
+}
+.linkish:hover { color: var(--accent); }
+
+/* advanced / custom proxy */
+.advanced { margin-top: 1.1rem; border-top: 1px solid var(--line); padding-top: 0.9rem; }
+.advanced summary {
+  cursor: pointer; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em;
+  font-weight: 600; color: var(--muted); list-style: none;
+}
+.advanced summary::-webkit-details-marker { display: none; }
+.advanced summary::before { content: "＋ "; color: var(--faint); }
+.advanced[open] summary::before { content: "－ "; }
+.advanced .hint code { background: var(--paper-2); padding: 0 0.3em; border-radius: 3px; font-size: 0.9em; }
+.advanced .url-row { margin-top: 0.6rem; }
+
 /* --------------------------------------------------------------------- */
 /* Outfit board — magazine layout                                         */
 /* --------------------------------------------------------------------- */
