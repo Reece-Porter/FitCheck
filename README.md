@@ -65,6 +65,24 @@ Then publish the `out/` directory (for example with the included
   This is best-effort: if a proxy is unavailable or a site blocks it, paste the
   image URL manually and everything else still works.
 
+### Full retailer support (optional proxy)
+
+Big retailers (Urban Outfitters, ASOS, Nike, SSENSE…) run bot protection that
+blocks the free public proxies, so their product links can't be auto-fetched.
+To make them work, deploy your own tiny fetch proxy — a **free Cloudflare
+Worker** — and point the app at it:
+
+1. Sign in at <https://dash.cloudflare.com> → **Workers & Pages → Create → Worker**.
+2. Replace the starter code with [`worker/product-proxy.js`](worker/product-proxy.js) and click **Deploy**.
+3. Copy the worker URL (e.g. `https://fitted-proxy.you.workers.dev`).
+4. In the app: **Build → Advanced · custom fetch proxy**, paste the URL and **Save**.
+   (The proxy is stored in your browser; it's also settable at build time via the
+   `NEXT_PUBLIC_PRODUCT_PROXY` env var.)
+
+The app will then try your proxy first and fall back to the public ones. Even
+with a proxy, the most aggressively protected sites may still block automated
+fetching — the manual "copy image address" route always works.
+
 ## Notes
 
 All data (outfits, wishlist, added items, reviews) lives in your browser's
