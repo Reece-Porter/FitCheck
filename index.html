@@ -3,58 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pool Table Rules &amp; Maintenance Guide</title>
-  <meta name="description" content="A friendly guide to the rules of pool (8-ball and 9-ball) and how to keep your pool table in top playing condition." />
+  <title>Fitted — Build Your Outfit</title>
+  <meta name="description" content="Paste shopping links to pull in clothing images, compose a whole outfit you can see together, then save your fits and wishlist." />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body data-page="builder">
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="index.html"><span class="ball">8</span> Rack &amp; Rail</a>
-      <nav class="site-nav">
-        <a href="index.html" class="active">Home</a>
-        <a href="rules.html">Rules</a>
-        <a href="fixing.html">Fixing Tables</a>
+      <a class="brand" href="index.html"><span class="brand-mark">F</span> Fitted</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html" class="active">Builder</a>
+        <a href="fits.html">My Fits<span class="count" id="nav-fits"></span></a>
+        <a href="wishlist.html">Wishlist<span class="count" id="nav-wishlist"></span></a>
+        <a href="recommendations.html">For You</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
-    <h1>Pool Table Rules &amp; Maintenance</h1>
-    <p>Everything you need to play a clean game and keep your table rolling true — from the break to bank shots, and from a loose pocket to a sagging slate.</p>
-    <div class="cta-row">
-      <a class="btn" href="rules.html">Learn the Rules</a>
-      <a class="btn outline" href="fixing.html">Fix Your Table</a>
-    </div>
-  </section>
-
   <main class="wrap">
-    <p class="lead">Whether you just bought your first table or you have been playing for years, having the rules straight and the equipment maintained makes every game better. Pick a topic below to get started.</p>
-
-    <div class="card-grid">
-      <a class="card" href="rules.html">
-        <h3>The Rules of Pool</h3>
-        <p>Standard 8-ball and 9-ball rules, how to break, fouls, and how to win the rack. Perfect for settling arguments at the table.</p>
-      </a>
-      <a class="card" href="fixing.html">
-        <h3>Fixing &amp; Maintaining Tables</h3>
-        <p>How to level a table, re-tip a cue, brush the felt, replace worn cushions, and keep everything playing like new.</p>
-      </a>
+    <div class="page-head">
+      <p class="eyebrow">Outfit Builder</p>
+      <h1>See your whole outfit before you buy</h1>
+      <p class="sub">Paste a shopping link or image URL, pull in the picture, and lay every piece out together — head to toe.</p>
     </div>
 
-    <h2>Why it matters</h2>
-    <p>A pool table is a precision instrument. A table that is even slightly out of level will send balls drifting; worn cushions kill the bounce; and dirty felt slows the roll and picks up chalk. Knowing the rules keeps games fair and fun, and a little regular upkeep protects an investment that can last for decades.</p>
+    <div class="builder">
+      <!-- Outfit board -->
+      <section class="panel" aria-label="Outfit board">
+        <div class="panel-head">
+          <h2>Your Outfit</h2>
+          <div class="board-toolbar">
+            <button class="btn ghost sm" id="wishlist-all" title="Save every item to your wishlist">♡ Save all</button>
+            <button class="btn ghost sm" id="clear-board">Clear</button>
+            <button class="btn accent sm" id="save-fit">Save fit</button>
+          </div>
+        </div>
+        <div class="outfit-board" id="board"></div>
+        <div class="summary" id="summary"></div>
+      </section>
 
-    <div class="callout tip">
-      <strong>New to the game?</strong>
-      Start with the <a href="rules.html">Rules page</a> to learn 8-ball, then check the <a href="fixing.html">Fixing Tables page</a> before your next games night to make sure your table is playing fair.
+      <!-- Add item form -->
+      <aside class="panel sticky-side" aria-label="Add an item">
+        <div class="panel-head"><h2>Add an item</h2></div>
+        <div class="panel-body">
+          <form id="add-form" autocomplete="off">
+            <div class="field">
+              <label for="f-url">Shopping link or image URL</label>
+              <div class="url-row">
+                <input type="url" id="f-url" placeholder="https://store.com/product…" />
+                <button type="button" class="btn sm" id="fetch-btn" title="Fetch preview image">Fetch</button>
+              </div>
+              <p class="hint">We’ll try to grab the product photo automatically. If it can’t, right-click the image → “Copy image address” and paste that.</p>
+            </div>
+
+            <div id="preview" class="preview-box" style="display:none"></div>
+
+            <div class="field">
+              <label for="f-name">Item name</label>
+              <input type="text" id="f-name" placeholder="e.g. Oversized cotton tee" />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="f-brand">Brand</label>
+                <input type="text" id="f-brand" placeholder="e.g. COS" />
+              </div>
+              <div class="field">
+                <label for="f-price">Price</label>
+                <input type="text" id="f-price" inputmode="decimal" placeholder="e.g. 45" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-cat">Category</label>
+              <select id="f-cat">
+                <option value="">Auto-detect</option>
+                <option value="headwear">Headwear</option>
+                <option value="outerwear">Outerwear</option>
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="footwear">Footwear</option>
+                <option value="accessory">Accessory</option>
+              </select>
+            </div>
+
+            <p class="status-msg" id="form-status"></p>
+            <button type="submit" class="btn accent" style="width:100%">Add to outfit</button>
+          </form>
+        </div>
+      </aside>
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>Rack &amp; Rail — a simple guide to pool table rules and maintenance.</p>
+  <!-- Save fit modal -->
+  <div class="modal-backdrop" id="save-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="save-modal-title">
+      <div class="modal-head">
+        <h2 id="save-modal-title">Save this fit</h2>
+        <button class="icon-btn" id="fit-modal-close" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="fit-name">Name your fit</label>
+          <input type="text" id="fit-name" placeholder="e.g. Weekend layers" />
+        </div>
+        <div style="display:flex;gap:.6rem;justify-content:flex-end">
+          <button class="btn ghost" id="fit-save-cancel">Cancel</button>
+          <button class="btn accent" id="fit-save-confirm">Save fit</button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">Fitted — build outfits from your favourite shops. Saved locally in your browser.</div>
   </footer>
+
+  <script src="brands.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

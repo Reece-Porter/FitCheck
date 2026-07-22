@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fitted — My Fits</title>
+  <meta name="description" content="Your saved outfits, kept together so you can revisit and re-shop any look." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="fits">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html"><span class="brand-mark">F</span> Fitted</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html">Builder</a>
+        <a href="fits.html" class="active">My Fits<span class="count" id="nav-fits"></span></a>
+        <a href="wishlist.html">Wishlist<span class="count" id="nav-wishlist"></span></a>
+        <a href="recommendations.html">For You</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <p class="eyebrow">Saved Looks</p>
+      <h1>My Fits</h1>
+      <p class="sub">Every outfit you’ve saved, in one place. Open one to view the full look or load it back into the builder.</p>
+    </div>
+
+    <div class="stats" id="fits-stats"></div>
+    <div class="gallery" id="fits-gallery"></div>
+  </main>
+
+  <!-- Fit viewer modal -->
+  <div class="modal-backdrop" id="view-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="view-title">
+      <div class="modal-head">
+        <h2 id="view-title">Fit</h2>
+        <button class="icon-btn" id="view-modal-close" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body" id="view-body"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">Fitted — build outfits from your favourite shops. Saved locally in your browser.</div>
+  </footer>
+
+  <script src="brands.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
