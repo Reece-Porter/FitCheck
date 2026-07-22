@@ -1,47 +1,73 @@
-# Fitted — Outfit Builder
+# Fitted — Outfit Builder & Style Check
 
-A small static website for building outfits from online shopping links. Paste
-a product link (or an image URL), pull in the photo, and see a whole outfit
-laid out together — then save your favourite looks, keep a wishlist, and get
-brand & item recommendations based on what you've added.
+An editorial outfit-building app. Pull clothing photos in from any shop by
+pasting a link, compose a whole look you can see together, save your fits and
+wishlist, get brand & item recommendations, and run an editorial **Style
+Check** that scores and critiques any outfit.
 
-Everything runs in the browser and is stored in `localStorage`, so there is no
-backend and no build step — perfect for static hosting like GitHub Pages.
+Built with **Next.js (App Router) + React + TypeScript**. Everything is stored
+in the browser's `localStorage`, so there's no backend — the app is exported as
+a fully static site.
 
 ## Pages
 
-| File | Contents |
+| Route | What it is |
 | --- | --- |
-| `index.html` | **Builder** — add items from shopping links/image URLs and compose an outfit grouped by category. |
-| `fits.html` | **My Fits** — your saved outfits; open any to view the full look or load it back into the builder. |
-| `wishlist.html` | **Wishlist** — individual pieces saved for later, with a running total. |
-| `recommendations.html` | **For You** — brand and clothing recommendations tailored to the brands, categories and styles you've entered. |
-| `app.js` | Application logic and the `localStorage` data layer. |
-| `brands.js` | Curated brand & item library that powers the recommendations. |
-| `style.css` | Shared styling for all pages. |
+| `/` | **Build** — add items from shopping links/image URLs and compose an outfit grouped by category. |
+| `/fits` | **My Fits** — your saved outfits in an editorial grid; open, review, load back into the builder, or delete. |
+| `/wishlist` | **Wishlist** — individual pieces saved for later, with a running total. |
+| `/for-you` | **For You** — brand and clothing recommendations tuned to the brands, categories and styles you've entered. |
+| `/style-check` | **Style Check** — a computed style score (0–100), an editorial critique, and your own star rating + notes. |
+
+## Design
+
+- **Type** — Bodoni Moda (display serif) paired with Inter (body/UI).
+- **Palette** — warm off-black ink, ivory/cream paper, a single vermilion
+  accent, with gold reserved for star ratings.
+- **Layout** — magazine-style asymmetric grids, oversized display headings,
+  generous negative space, tasteful hover/transition motion.
+
+The design system lives in `app/globals.css`.
+
+## Getting started
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
+
+Build a static export:
+
+```bash
+npm run build    # outputs to ./out
+```
+
+### Deploying to GitHub Pages (project site)
+
+A project site is served from a sub-path (e.g. `/Pool-table-rules`), so build
+with a base path:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/Pool-table-rules npm run build
+```
+
+Then publish the `out/` directory (for example with the included
+`.github/workflows/deploy.yml`, after setting **Settings → Pages → Source** to
+**GitHub Actions**). For a user/custom-domain site served from the root, omit
+`NEXT_PUBLIC_BASE_PATH`.
 
 ## How adding items works
 
-- Displaying an image from another site works straight away — just paste the
-  product photo's image URL (right-click the image → **Copy image address**).
+- Displaying a photo from another site works straight away — paste the product
+  image URL (right-click the photo → **Copy image address**).
 - For a **product page link**, the app tries to auto-extract the photo, title
-  and price using the page's Open Graph tags via public read-only CORS proxies.
+  and price from the page's Open Graph tags via public read-only CORS proxies.
   This is best-effort: if a proxy is unavailable or a site blocks it, paste the
   image URL manually and everything else still works.
 
-## Viewing the site
-
-No build step is required — open `index.html` in any web browser, or serve the
-folder locally:
-
-```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000
-```
-
 ## Notes
 
-All data (outfits, wishlist, added items) lives in your browser's
-`localStorage`, so it stays on your device and isn't shared between browsers.
-The recommendation library in `brands.js` is a curated starting point, not a
-live product feed.
+All data (outfits, wishlist, added items, reviews) lives in your browser's
+`localStorage`, so it stays on your device. Recommendations and the Style Check
+run entirely client-side from a curated brand library in `lib/brands.ts` — a
+starting point, not a live product feed.

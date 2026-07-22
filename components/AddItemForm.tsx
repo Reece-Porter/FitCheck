@@ -1,0 +1,165 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { useBuilder, uid } from "@/lib/store";
+import { fetchPreview, isImageUrl, Preview } from "@/lib/preview";
+import { guessCategory } from "@/lib/categories";
+import { parsePrice, safeUrl, hostname } from "@/lib/format";
+import { Category } from "@/lib/types";
+import { toast } from "@/components/Toast";
+
+export default function AddItemForm() {
+  const { add } = useBuilder();
+  const [url, setUrl] = useState("");
+  const [name, setName] = useState("");
+  const [brand, setBrand] = useState("");
+  const [price, setPrice] = useState("");
+  const [cat, setCat] = useState<Category | "">("");
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const [pendingImage, setPendingImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<{ text: string; kind?: "err" | "ok" }>({ text: "" });
+  const urlRef = useRef<HTMLInputElement>(null);
+
+  async function runFetch() {
+    const u = url.trim();
+    if (!u) return setStatus({ text: "Paste a shopping link or image URL first.", kind: "err" });
+    if (!safeUrl(u)) return setStatus({ text: "That doesn't look like a valid URL.", kind: "err" });
+
+    setLoading(true);
+    setStatus({ text: "Fetching preview…" });
+    const p = await fetchPreview(u);
+    setLoading(false);
+
+    if (p.image) {
+      setPendingImage(p.image);
+      setPreview(p);
+      if (!name && p.title) setName(p.title.slice(0, 80));
+      if (!price && p.price) setPrice(String(parsePrice(p.price) ?? ""));
+      if (!cat) setCat(guessCategory((p.title || "") + " " + u));
+      setStatus({ text: "Preview loaded — tidy up the details and add it.", kind: "ok" });
+    } else if (isImageUrl(u)) {
+      setPendingImage(u);
+      setPreview({ image: u, title: null, price: null, site: hostname(u) });
+      setStatus({ text: "Using the pasted image URL.", kind: "ok" });
+    } else {
+      setPendingImage(null);
+      setStatus({
+        text: "Couldn't auto-load an image. Right-click the product photo → “Copy image address”, paste that and fetch again — or just fill in the details below.",
+        kind: "err"
+      });
+    }
+  }
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const u = url.trim();
+    const image = pendingImage || (isImageUrl(u) ? u : "");
+    const finalName = name.trim();
+    if (!image && !finalName) {
+      return setStatus({ text: "Add at least an image (fetch a link) or a name.", kind: "err" });
+    }
+    add({
+      id: uid(),
+      name: finalName || "Untitled piece",
+      brand: brand.trim(),
+      category: (cat || guessCategory(finalName + " " + u)) as Category,
+      price: parsePrice(price),
+      image: safeUrl(image),
+      url: safeUrl(u),
+      at: Date.now()
+    });
+    setUrl("");
+    setName("");
+    setBrand("");
+    setPrice("");
+    setCat("");
+    setPreview(null);
+    setPendingImage(null);
+    setStatus({ text: "" });
+    urlRef.current?.focus();
+    toast("Added to your outfit");
+  }
+
+  return (
+    <aside className="compose">
+      <h3>Add a piece</h3>
+      <p className="sub">Paste a link — we&rsquo;ll pull in the photo automatically.</p>
+      <form onSubmit={onSubmit} autoComplete="off">
+        <div className="field">
+          <label htmlFor="f-url">Shopping link or image URL</label>
+          <div className="url-row">
+            <input
+              id="f-url"
+              ref={urlRef}
+              className="input"
+              type="url"
+              placeholder="https://store.com/product…"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  runFetch();
+                }
+              }}
+            />
+            <button type="button" className="btn sm" onClick={runFetch} disabled={loading}>
+              {loading ? <span className="spinner" /> : "Fetch"}
+            </button>
+          </div>
+          <p className="hint">
+            If it can&rsquo;t grab the photo, right-click the product image → &ldquo;Copy image address&rdquo;
+            and paste that.
+          </p>
+        </div>
+
+        {preview?.image && (
+          <div className="preview">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview.image} alt="preview" onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")} />
+            <div className="pmeta">
+              <strong>{preview.title || "Image found"}</strong>
+              {preview.site ? <span>{preview.site}</span> : null}
+            </div>
+          </div>
+        )}
+
+        <div className="field">
+          <label htmlFor="f-name">Item name</label>
+          <input id="f-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Oversized cotton tee" />
+        </div>
+
+        <div className="field-2">
+          <div className="field">
+            <label htmlFor="f-brand">Brand</label>
+            <input id="f-brand" className="input" value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="COS" />
+          </div>
+          <div className="field">
+            <label htmlFor="f-price">Price</label>
+            <input id="f-price" className="input" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="45" />
+          </div>
+        </div>
+
+        <div className="field">
+          <label htmlFor="f-cat">Category</label>
+          <select id="f-cat" className="select" value={cat} onChange={(e) => setCat(e.target.value as Category | "")}>
+            <option value="">Auto-detect</option>
+            <option value="headwear">Headwear</option>
+            <option value="outerwear">Outerwear</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="footwear">Footwear</option>
+            <option value="accessory">Accessory</option>
+          </select>
+        </div>
+
+        {status.text ? <p className={"status" + (status.kind ? " " + status.kind : "")}>{status.text}</p> : <p className="status" />}
+
+        <button type="submit" className="btn accent block">
+          Add to outfit
+        </button>
+      </form>
+    </aside>
+  );
+}
