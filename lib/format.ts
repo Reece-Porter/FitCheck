@@ -9,8 +9,8 @@ export function parsePrice(v: string | number | null | undefined): number | null
 export function money(n: number | null | undefined): string {
   if (n == null || isNaN(n)) return "";
   return (
-    "$" +
-    n.toLocaleString(undefined, {
+    "£" +
+    n.toLocaleString("en-GB", {
       minimumFractionDigits: n % 1 ? 2 : 0,
       maximumFractionDigits: 2
     })
