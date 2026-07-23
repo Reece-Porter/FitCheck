@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/fits", label: "My Fits", badge: "fits" as const },
   { href: "/wishlist", label: "Wishlist", badge: "wish" as const },
   { href: "/trips", label: "Trips" },
+  { href: "/search", label: "Search" },
   { href: "/for-you", label: "For You" }
 ];
 
