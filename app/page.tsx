@@ -6,6 +6,7 @@ import Link from "next/link";
 import PageHead from "@/components/PageHead";
 import AddItemForm from "@/components/AddItemForm";
 import OutfitSlots from "@/components/OutfitSlots";
+import HomePreview from "@/components/HomePreview";
 import Modal from "@/components/Modal";
 import { useBuilder, useFits, useWishlist, setReviewTarget } from "@/lib/store";
 import { money, totalPrice } from "@/lib/format";
@@ -85,11 +86,11 @@ export default function BuilderPage() {
           <div className="section-label">
             <h2>Your Outfit</h2>
             <div className="tools">
-              <button className="btn ghost sm" onClick={saveAllToWishlist} disabled={!items.length}>
-                ♡ Save all
-              </button>
               <button className="btn ghost sm" onClick={() => { clear(); toast("Board cleared"); }} disabled={!items.length}>
                 Clear
+              </button>
+              <button className="btn ghost sm" onClick={saveAllToWishlist} disabled={!items.length} title="Add every piece to your wishlist">
+                ♡ Wishlist all
               </button>
               <button className="btn sm" onClick={reviewNow} disabled={!items.length}>
                 Style Check
@@ -101,19 +102,17 @@ export default function BuilderPage() {
           </div>
 
           {items.length === 0 ? (
-            <div className="empty">
-              <div className="mark">Ø</div>
-              <h3>Your outfit board is empty</h3>
-              <p>Paste a shopping link on the right, fetch the photo, and start building a look you can see all together.</p>
-              <button
-                className="btn accent"
-                onClick={() => {
+            <div className="empty-home">
+              <p className="empty-lead">
+                Add pieces from the panel on the right — or see the payoff first. Here&rsquo;s a finished look and the
+                Style Check it earns:
+              </p>
+              <HomePreview
+                onLoad={() => {
                   replace(sampleOutfit());
                   toast("Sample outfit loaded");
                 }}
-              >
-                Load a sample outfit
-              </button>
+              />
             </div>
           ) : (
             <>

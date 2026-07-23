@@ -42,3 +42,28 @@ export interface CatalogEntry {
   name: string;
   at: number;
 }
+
+/* ------------------------------- Trips ---------------------------------- */
+
+export interface TripEvent {
+  id: string;
+  title: string;
+  time?: string; // free text, e.g. "09:30" or "Morning"
+  location?: string;
+  notes?: string;
+  outfits?: string[]; // ids of saved Fits attached to this specific event
+}
+
+export interface TripDay {
+  events: TripEvent[];
+  outfits: string[]; // ids of saved Fits attached to the whole day
+}
+
+export interface Trip {
+  id: string;
+  name: string;
+  start: string; // YYYY-MM-DD (inclusive)
+  end: string; // YYYY-MM-DD (inclusive)
+  days: Record<string, TripDay>; // keyed by YYYY-MM-DD
+  at: number;
+}

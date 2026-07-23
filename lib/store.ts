@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore, useCallback } from "react";
-import { Item, Fit, CatalogEntry, Review } from "./types";
+import { Item, Fit, CatalogEntry, Review, Trip, TripDay } from "./types";
 
 /* ---------------------------------------------------------------------------
    A tiny localStorage-backed store. Because the app is statically exported,
@@ -19,6 +19,7 @@ const listeners = new Set<() => void>();
 const EMPTY_ITEMS: Item[] = [];
 const EMPTY_FITS: Fit[] = [];
 const EMPTY_CATALOG: CatalogEntry[] = [];
+const EMPTY_TRIPS: Trip[] = [];
 
 function read<T>(key: string, fallback: T): T {
   if (cache.has(key)) return cache.get(key) as T;
@@ -141,6 +142,40 @@ export function useWishlist() {
 /* -------------------------------- catalog -------------------------------- */
 export function useCatalog(): CatalogEntry[] {
   return useKey<CatalogEntry[]>("catalog", EMPTY_CATALOG);
+}
+
+/* --------------------------------- trips --------------------------------- */
+export function useTrips() {
+  const trips = useKey<Trip[]>("trips", EMPTY_TRIPS);
+
+  const create = useCallback((name: string, start: string, end: string): string => {
+    const id = uid();
+    const trip: Trip = { id, name: name || "Untitled trip", start, end, days: {}, at: Date.now() };
+    write("trips", [trip, ...read<Trip[]>("trips", EMPTY_TRIPS)]);
+    return id;
+  }, []);
+
+  const remove = useCallback((id: string) => {
+    write("trips", read<Trip[]>("trips", EMPTY_TRIPS).filter((t) => t.id !== id));
+  }, []);
+
+  const patch = useCallback((id: string, p: Partial<Pick<Trip, "name" | "start" | "end">>) => {
+    write("trips", read<Trip[]>("trips", EMPTY_TRIPS).map((t) => (t.id === id ? { ...t, ...p } : t)));
+  }, []);
+
+  // Update (or create) a single day within a trip via a mapper on its current value.
+  const updateDay = useCallback((tripId: string, date: string, map: (d: TripDay) => TripDay) => {
+    write(
+      "trips",
+      read<Trip[]>("trips", EMPTY_TRIPS).map((t) => {
+        if (t.id !== tripId) return t;
+        const current: TripDay = t.days[date] || { events: [], outfits: [] };
+        return { ...t, days: { ...t.days, [date]: map(current) } };
+      })
+    );
+  }, []);
+
+  return { trips, create, remove, patch, updateDay };
 }
 
 /* ---------------------------- review handoff ----------------------------- */

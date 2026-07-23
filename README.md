@@ -16,8 +16,19 @@ a fully static site.
 | `/` | **Build** — add items from shopping links/image URLs and compose an outfit grouped by category. |
 | `/fits` | **My Fits** — your saved outfits in an editorial grid; open, review, load back into the builder, or delete. |
 | `/wishlist` | **Wishlist** — individual pieces saved for later, with a running total. |
+| `/trips` | **Trips** — plan a named date range and get a day-by-day itinerary; add events per day and pin saved outfits from My Fits to each day. |
 | `/for-you` | **For You** — brand and clothing recommendations tuned to the brands, categories and styles you've entered. |
 | `/style-check` | **Style Check** — a computed style score (0–100), an editorial critique, and your own star rating + notes. |
+
+### Trip Planner data model
+
+A **Trip** is `{ id, name, start, end, days }`, where `days` is a map keyed by
+`YYYY-MM-DD`. Each **day** is `{ events: TripEvent[], outfits: string[] }` — the
+`outfits` array holds ids of saved Fits pinned to that day. A **TripEvent** is
+`{ id, title, time?, location?, notes?, outfits? }`. Days are generated on the
+fly from the trip's date range, so only days you actually add things to take up
+storage. Everything lives under the `fitted:trips` localStorage key, same as the
+rest of the app.
 
 ## Design
 
