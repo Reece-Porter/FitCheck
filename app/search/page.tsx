@@ -5,6 +5,8 @@ import PageHead from "@/components/PageHead";
 import { searchCatalog, shoppingSearchUrl, findAtBrandUrl } from "@/lib/search";
 import { CAT_LABEL } from "@/lib/categories";
 import { CAT_ICON } from "@/components/icons";
+import SmartImage from "@/components/SmartImage";
+import { pieceImage } from "@/lib/pieceImage";
 import { cap, safeUrl } from "@/lib/format";
 
 const EXAMPLES = [
@@ -89,7 +91,9 @@ export default function SearchPage() {
               <div className="sugg-grid">
                 {result.items.map((item) => (
                   <article className="sugg fade-up" key={item.name + item.brand}>
-                    <div className="frame">{CAT_ICON[item.category]}</div>
+                    <div className="frame">
+                      <SmartImage src={pieceImage(item.name, item.category)} alt={item.name} width={440} fallback={<div className="noimg">{CAT_ICON[item.category]}</div>} />
+                    </div>
                     <div className="info">
                       <div className="brand">{item.brand}</div>
                       <div className="name">{item.name}</div>

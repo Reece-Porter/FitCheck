@@ -7,6 +7,8 @@ import { useCatalog, useWishlist, useFits, useBuilder } from "@/lib/store";
 import { BRAND_CATALOG, ITEM_SUGGESTIONS, Brand, Suggestion } from "@/lib/brands";
 import { CATEGORIES, CAT_LABEL } from "@/lib/categories";
 import { CAT_ICON } from "@/components/icons";
+import SmartImage from "@/components/SmartImage";
+import { pieceImage } from "@/lib/pieceImage";
 import { safeUrl, cap } from "@/lib/format";
 import { Category } from "@/lib/types";
 
@@ -182,7 +184,9 @@ export default function ForYouPage() {
             const gap = missingCats.includes(item.category);
             return (
               <article className="sugg fade-up" key={item.name}>
-                <div className="frame">{CAT_ICON[item.category]}</div>
+                <div className="frame">
+                  <SmartImage src={pieceImage(item.name, item.category)} alt={item.name} width={440} fallback={<div className="noimg">{CAT_ICON[item.category]}</div>} />
+                </div>
                 <div className="info">
                   <div className="brand">{item.brand}</div>
                   <div className="name">{item.name}</div>
