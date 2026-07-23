@@ -181,7 +181,7 @@ export default function AddItemForm() {
   return (
     <aside className="compose">
       <h3>Add a piece</h3>
-      <p className="sub">Paste a link — we&rsquo;ll pull in the photo automatically.</p>
+      <p className="sub">Two ways in — paste a link, or add the photo itself.</p>
       <form onSubmit={onSubmit} autoComplete="off">
         <div className="field">
           <label htmlFor="f-url">Shopping link or image URL</label>
@@ -205,10 +205,16 @@ export default function AddItemForm() {
               {loading ? <span className="spinner" /> : "Fetch"}
             </button>
           </div>
-          <p className="hint">Works on most shops. For ones that block bots (Urban Outfitters, ASOS…), drop or paste the photo below.</p>
+          <p className="hint works-with">
+            <strong>Works well with</strong> Uniqlo · COS · Arket · Levi&rsquo;s · Nike · Zara · Ralph Lauren — and most shops.
+          </p>
         </div>
 
-        {/* Drop / paste / browse an image directly */}
+        <div className="or-div">
+          <span>or add the photo directly</span>
+        </div>
+
+        {/* Drop / paste / browse an image directly — an equal first-class path */}
         <div
           className={"dropzone" + (dragging ? " drag" : "")}
           role="button"
