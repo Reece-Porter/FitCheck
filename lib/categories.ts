@@ -44,12 +44,17 @@ const CATEGORY_KEYWORDS: Record<Category, string[]> = {
   ]
 };
 
-export function guessCategory(text: string): Category {
+/** Returns the best-matching category, or null when nothing matches. */
+export function matchCategory(text: string): Category | null {
   const t = (text || "").toLowerCase();
   for (const cat of CATEGORIES) {
     if ((CATEGORY_KEYWORDS[cat.id] || []).some((k) => t.includes(k))) {
       return cat.id;
     }
   }
-  return "top";
+  return null;
+}
+
+export function guessCategory(text: string): Category {
+  return matchCategory(text) ?? "top";
 }

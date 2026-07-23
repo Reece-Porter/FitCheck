@@ -17,6 +17,7 @@ a fully static site.
 | `/fits` | **My Fits** — your saved outfits in an editorial grid; open, review, load back into the builder, or delete. |
 | `/wishlist` | **Wishlist** — individual pieces saved for later, with a running total. |
 | `/trips` | **Trips** — plan a named date range and get a day-by-day itinerary; add events per day and pin saved outfits from My Fits to each day. |
+| `/search` | **Search** — type any clothing description and get matching item recommendations, brands to try, and quick links to find it at the shops. |
 | `/for-you` | **For You** — brand and clothing recommendations tuned to the brands, categories and styles you've entered. |
 | `/style-check` | **Style Check** — a computed style score (0–100), an editorial critique, and your own star rating + notes. |
 
